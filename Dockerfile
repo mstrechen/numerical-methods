@@ -11,8 +11,5 @@ RUN pip install -r requirements.txt
 
 COPY ./src /app
 
-EXPOSE 8080
 
-ENTRYPOINT [ "python" ]
-
-CMD [ "app.py" ]
+ENTRYPOINT [ "bash", "entrypoint.sh" ]
