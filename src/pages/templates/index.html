@@ -1,6 +1,10 @@
-<!DOCTYPE html>
-<title>{% block title %}{% endblock %} - Numerical methods</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% extends "basic-template.html" %}
+
+{% block title %}{{page_title}} | Numerical methods{% endblock %}
+
+{% block content %}
 <section class="content">
     <h1>The story begins there.</h1>
 </section>
+
+{% endblock %}

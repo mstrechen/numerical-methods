@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<title>{% block title %} {% endblock %}</title>
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+
+
+{% block jquery %}
+<script 
+    type="text/javascript" 
+    src="{{ url_for('static', filename='js/jquery-3.3.1.slim.min.js')}}">
+</script>
+{% endblock %}
+
+{% block bootstrap %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+<script 
+    type="text/javascript" 
+    src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}">
+</script>
+{% endblock %}
+
+{% block navigation %}
+<header>
+    <div class="collapse bg-dark" id="navbarHeader">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4 class="text-white">Numerical-methods</h4>
+            <p style="color: lightgray">Well, the goal of this project is pretty simple and predictable - to deal with my laboratory works on numerical methods. But everything is a little challenge for me, so I decided to make it as pretty as possible.</p>
+          </div>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4 class="text-white">Contact via...</h4>
+            <ul class="list-unstyled">
+                <li><a href="http://github.com/mstrechen/" class="text-white">GitHub</a></li>
+                <li><a href="https://www.linkedin.com/in/matvii-strechen/" class="text-white">LinkedIn</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+      <div class="container d-flex justify-content-between">
+        <a href="/" class="navbar-brand d-flex align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" aria-hidden="true" class="mr-2" viewBox="0 0 25 25" focusable="false">
+            <path d = "
+                M 13 24
+                V 1
+                l 2 2
+                l -2 -2
+                l -2 2
+                M 1 13
+                H 24
+                l -2 2
+                l 2 -2
+                l -2 -2
+                M 2 2
+                C 4 24 10 23 24 6
+                "></path>
+            <path 
+                color="red" stroke-width="2" 
+                d = "
+                M 4 13 
+                L 4 13
+                M 18 13
+                L 18 13"></path>
+            </svg>
+          <strong>Numerical methods</strong>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+{% endblock %}
+
+<main role="main" class="bg-light" style="min-height:530px">
+{% block content %}
+{% endblock %}
+</main>
+
+{% block footer %}
+<footer class="text-muted  mt-3">
+    <div class="container" >
+        <p class="float-right">
+            <strong><a href="#">Back to top</a></strong>
+        </p>
+        <strong><p>Numerical methods © Matthew Strechen</p></strong>
+    </div>
+</footer>
+{% endblock %}
