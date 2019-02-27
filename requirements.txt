@@ -3,3 +3,6 @@ gunicorn==19.9
 wtforms==2.2.1
 numpy==1.15.4
 flask-wtf==0.14.2
+werkzeug==0.14.1
+Jinja2==2.10
+matplotlib==2.2.2
