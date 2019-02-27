@@ -1,11 +1,9 @@
-from werkzeug.datastructures import CombinedMultiDict
-
 from flask import abort, Blueprint, request
 import logging
 
-import dichotomy_method
+from . import dichotomy_method
 
-import forms
+from . import forms
 
 bp = Blueprint('api', __name__, url_prefix='/api') 
 

@@ -4,10 +4,24 @@
 
 {% block content %}
 <div class="container mt-4">
-    <p>Have fun! </p>
+    <p>
+        Dichotomy (or Bisection) method is a root-finding method. You can use it only for continuous functions on the segment
+        with opposite signs on the ends of this segment. In the form below you have to set the function <strong>f(x)</strong>,
+        bounds of segment <strong>[A; B]</strong> and the <strong>&epsilon;</strong> - desirable precision.
+    </p>
+    <p>
+        You can only use the following list of <i>unary</i> functions:
+        <strong>abs, arccos, arcsin, cbrt, cos, exp, log, log10, log1p, max, min, sin, sgn, sqrt, tan.</strong>
+        Also there are couple of <i>binary</i> functions: <strong>arctan2, hypot, pow.</strong>
+        And of course, you can use all "classical" arithmetic operations.
+    </p>
+    <p>
+        Have fun!
+    </p>
+
     <div class="container rounded border calc-card">
         <div class="row border rounded">
-                <div class="col-md-6 text-center bg-dark rounded-left">
+                <div class="col-md-6 pt-1 text-center bg-dark rounded-left">
                     <form class="mt-2 text-white px-3">
                         <div class="row">
                             <label for="function" class="col-md-2 mt-2 col-md-smallpad">f(x) =</label>
@@ -29,7 +43,7 @@
                     </form>
                 </div>
                 <div id="illustration" class="col-md-6 text-center bg-light rounded-right"
-                style="min-height: 250px"  onresize="set_bg_image()" >
+                style="min-height: 250px">
                 </div>
         </div>
         <div class="row bg-white rounded-bottom py-2 px-4">
@@ -47,13 +61,12 @@
             data.fun_encoded = encodeURIComponent(
                 document.getElementById("function").value
             )
-            console.log(data.fun_encoded)
             data.left_bound = document.getElementById("left_bound").value
             data.right_bound = document.getElementById("right_bound").value
             data.epsilon = document.getElementById("epsilon").value
 
-            data.width = document.getElementById("illustration").width
-            data.height = document.getElementById("illustration").height
+            data.width = document.getElementById("illustration").clientWidth
+            data.height = document.getElementById("illustration").clientHeight
             return data;
         }
         function set_bg_image(){
@@ -65,7 +78,8 @@
             + `&eps=${data.epsilon}`
             + `&h=${data.height}`
             + `&w=${data.width}`
-            + `&tracing=${data.tracing}`
+            console.log(url)
+
             document.getElementById("illustration").style.backgroundImage = `url('${url}')`
         }
         function put_answer(){
@@ -80,7 +94,7 @@
             console.log(url)
 
             Http.open("GET", url);
-            Http.onreadystatechange=(e)=>{
+            Http.onreadystatechange = (e) => {
                 document.getElementById("solution_text").innerText = Http.responseText
             }
             Http.send();
@@ -89,6 +103,9 @@
             put_answer()
             set_bg_image()
         }
+
+        window.onresize = set_bg_image()
+
         solve()
     </script>
 </div>
