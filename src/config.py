@@ -18,5 +18,8 @@ def configure_app():
     app.wsgi_app = ProxyFix(app.wsgi_app)
 
     app.config['DEBUG'] = get_bool_flag('DEBUG')
+    
+    SECRET_KEY = os.urandom(32)
+    app.config['SECRET_KEY'] = SECRET_KEY
 
     return app

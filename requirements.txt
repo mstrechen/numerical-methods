@@ -1,2 +1,5 @@
 Flask==0.12.4
 gunicorn==19.9
+wtforms==2.2.1
+numpy==1.15.4
+flask-wtf==0.14.2

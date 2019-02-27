@@ -4,6 +4,92 @@
 
 {% block content %}
 <div class="container mt-4">
-    <p>To be continued... </p>
+    <p>Have fun! </p>
+    <div class="container rounded border calc-card">
+        <div class="row border rounded">
+                <div class="col-md-6 text-center bg-dark rounded-left">
+                    <form class="mt-2 text-white px-3">
+                        <div class="row">
+                            <label for="function" class="col-md-2 mt-2 col-md-smallpad">f(x) =</label>
+                            <input type="text" class="form-control col-md-10" id="function" placeholder="f(x)" value="x*x + 4 * sin(x)">
+                        </div>
+                        <div class="row mt-1">
+                            <label for="left_bound" class="col-md-2 mt-2 col-md-smallpad">A =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4 col-md-smallpad" id="left_bound" placeholder="A" value="-1.5">
+                            <label for="right_bound" class="col-md-2 mt-2 col-md-smallpad">B =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4" id="right_bound" placeholder="B" value="5">
+                        </div>
+                        <div class="row mt-1">
+                            <label for="epsilon" class="col-md-2 mt-2 col-md-smallpad">&epsilon; =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4 mb-2" id="epsilon" placeholder="&epsilon;" value="1e-5">
+                            <div class="col-md-6 ">
+                                <button type="button" onclick="solve()" class="btn btn-primary mb-2" style="width:100%">Calculate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="illustration" class="col-md-6 text-center bg-light rounded-right"
+                style="min-height: 250px"  onresize="set_bg_image()" >
+                </div>
+        </div>
+        <div class="row bg-white rounded-bottom py-2 px-4">
+            <h5 class="text-center w-100">
+                <strong> Solution:
+                </strong> 
+                <label id="solution_text" class="mb-0"></label> 
+            </h5>
+        </div>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+        function get_form_and_img_data(){
+            var data = {}
+            
+            data.fun_encoded = encodeURIComponent(
+                document.getElementById("function").value
+            )
+            console.log(data.fun_encoded)
+            data.left_bound = document.getElementById("left_bound").value
+            data.right_bound = document.getElementById("right_bound").value
+            data.epsilon = document.getElementById("epsilon").value
+
+            data.width = document.getElementById("illustration").width
+            data.height = document.getElementById("illustration").height
+            return data;
+        }
+        function set_bg_image(){
+            var data = get_form_and_img_data()
+            var url = "/api/dichotomy-method/img" 
+            + `?f=${data.fun_encoded}`
+            + `&left_bound=${data.left_bound}`
+            + `&right_bound=${data.right_bound}`
+            + `&eps=${data.epsilon}`
+            + `&h=${data.height}`
+            + `&w=${data.width}`
+            + `&tracing=${data.tracing}`
+            document.getElementById("illustration").style.backgroundImage = `url('${url}')`
+        }
+        function put_answer(){
+            data = get_form_and_img_data()
+
+            var Http = new XMLHttpRequest();
+            var url = "/api/dichotomy-method/ans" 
+            + `?f=${data.fun_encoded}`
+            + `&left_bound=${data.left_bound}`
+            + `&right_bound=${data.right_bound}`
+            + `&eps=${data.epsilon}`
+            console.log(url)
+
+            Http.open("GET", url);
+            Http.onreadystatechange=(e)=>{
+                document.getElementById("solution_text").innerText = Http.responseText
+            }
+            Http.send();
+        }
+        function solve(){
+            put_answer()
+            set_bg_image()
+        }
+        solve()
+    </script>
 </div>
 {% endblock %}
