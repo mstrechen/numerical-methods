@@ -7,9 +7,11 @@ from pages import pages
 
 from werkzeug.contrib.fixers import ProxyFix
 
+
 def get_bool_flag(key):
     val = os.environ.get(key, False)
     return val in ['1', 'true', 'True', 'TRUE']
+
 
 def configure_app():
     app = Flask(__name__, static_url_path='/static', static_folder='static')
@@ -19,7 +21,7 @@ def configure_app():
 
     app.config['DEBUG'] = get_bool_flag('DEBUG')
     
-    SECRET_KEY = os.urandom(32)
-    app.config['SECRET_KEY'] = SECRET_KEY
+    secret_key = os.urandom(32)
+    app.config['SECRET_KEY'] = secret_key
 
     return app
