@@ -23,4 +23,4 @@ def get_page(page):
         else:
             return render_template('%s.html' % page)
     except TemplateNotFound:
-        abort(404)
+        abort(400)

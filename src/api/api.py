@@ -16,5 +16,5 @@ def dichotomy_solve(method):
     except KeyError:
         abort(404)
     except Exception as ex:
-        logging.log(logging.CRITICAL, str(ex))
+        logging.critical(str(type(ex)) + str(ex))
         abort(400)

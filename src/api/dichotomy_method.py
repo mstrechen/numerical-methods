@@ -1,12 +1,10 @@
-from flask import make_response, Response, send_from_directory
+from flask import make_response, send_from_directory
 
 import matplotlib
 matplotlib.use('Agg')
 
-from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from io import StringIO, BytesIO
 
@@ -55,18 +53,12 @@ class DichotomyMethod:
 
     @staticmethod
     def get_answer(f, a, b, eps):
-        import logging
-        logging.log(logging.CRITICAL, str([f, a, b, eps]))
-    
         if eps < 1e-9:
             return 'Error. Epsilon must be greater than 0.000\'000\'001'
         if a >= b:
             return 'Error. A must be less than B'
         try:
             if DichotomyMethod.get_val(f, a) * DichotomyMethod.get_val(f, b) > 0:
-                logging.critical(DichotomyMethod.get_val(f, a))
-                logging.critical(DichotomyMethod.get_val(f, b))
-                
                 return 'Error. f(a) * f(b) must be not greater than zero.'
         except (NameError, SyntaxError):
             return 'Error in your function. Maybe you did something wrong...?   '
@@ -108,7 +100,7 @@ class DichotomyMethod:
         py = DichotomyMethod.get_val(f, px)
         graphic.scatter(px, py, marker='x', color='r', zorder=3)
 
-        if res is not str:
+        if type(res) is not str:
             graphic.scatter(np.array([res]), np.array([0]), color='g', zorder=4)
 
         return fig
@@ -148,7 +140,7 @@ def get_answer(form):
         form.right_bound.data,
         form.eps.data
     )
-    if ans is str:
+    if type(ans) is not float:
         return ans
     return '%.9f' % ans
 
