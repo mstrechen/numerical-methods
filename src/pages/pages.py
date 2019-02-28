@@ -11,6 +11,14 @@ pages_list = [
                 "method that applies to any continuous functions for "
                 "which one knows two values with opposite signs.",
     },
+    {
+        "page": "fixed-point-iteration",
+        "headline": "Fixed-point iteration",
+        "text": "Fixed-point iteration is a method of computing fixed points "
+                "of iterated functions. It can be also applied for finding the "
+                "root of continuous function"
+    },
+
 ]
 
 
