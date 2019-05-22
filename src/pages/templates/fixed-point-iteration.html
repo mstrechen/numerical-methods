@@ -48,8 +48,8 @@
                             <input type="number" step="0.000001" class="form-control col-md-4" id="right_bound" placeholder="B" value="5">
                         </div>
                         <div class="row mt-1">
-                            <label for="itercount" class="col-md-6 mt-2 col-md-smallpad">Count of iterations = </label>
-                            <input type="number" step="1" class="form-control col-md-6 mb-2" id="itercount" placeholder="Count of iterations" value="100">
+                            <label for="eps" class="col-md-6 mt-2 col-md-smallpad">&epsilon; = </label>
+                            <input type="number" step="1" class="form-control col-md-6 mb-2" id="eps" placeholder="Count of iterations" value="1e-5">
                         </div>
                         <div class="row mt-1">
                             <label for="x_0" class="col-md-2 mt-2 col-md-smallpad">x<sub>0</sub> = </label>
@@ -82,8 +82,6 @@
         </div>
         <div class="row bg-white rounded-bottom py-2 px-4">
             <h5 class="text-center w-100">
-                <strong> Solution:
-                </strong> 
                 <label id="solution_text" class="mb-0"></label> 
             </h5>
         </div>
@@ -101,7 +99,7 @@
 
             data.left_bound = document.getElementById("left_bound").value
             data.right_bound = document.getElementById("right_bound").value
-            data.iter_count = document.getElementById("itercount").value
+            data.eps = document.getElementById("eps").value
 
             data.x0 = document.getElementById("x_0").value
             data.tracing = document.getElementById("tracing").checked ? 1 : 0
@@ -117,7 +115,7 @@
             + `&lamb=${data.lambda_encoded}`
             + `&left_bound=${data.left_bound}`
             + `&right_bound=${data.right_bound}`
-            + `&iter_count=${data.iter_count}`
+            + `&eps=${data.eps}`
             + `&x0=${data.x0}`
             + `&tracing=${data.tracing}`
             + `&h=${data.height}`
@@ -134,7 +132,7 @@
             + `&lamb=${data.lambda_encoded}`
             + `&left_bound=${data.left_bound}`
             + `&right_bound=${data.right_bound}`
-            + `&iter_count=${data.iter_count}`
+            + `&eps=${data.eps}`
             + `&x0=${data.x0}`
 
             console.log(url)
@@ -157,7 +155,7 @@
             + `&lamb=${data.lambda_encoded}`
             + `&left_bound=${data.left_bound}`
             + `&right_bound=${data.right_bound}`
-            + `&iter_count=${data.iter_count}`
+            + `&eps=${data.eps}`
             + `&x0=${data.x0}`
             + `&tracing=${data.tracing}`
             + `&h=${h}`

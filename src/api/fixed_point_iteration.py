@@ -42,6 +42,8 @@ class FixedPointIteration:
 
     @staticmethod
     def check_f_a_b(f, a, b):
+        import logging
+        logging.critical(f + "|" + str(a) + "-" + str(b) )
         if a >= b:
             return False
         try:
@@ -50,6 +52,29 @@ class FixedPointIteration:
             return False
 
         return True
+
+    @staticmethod
+    def get_n0(f, lamb, x, a, b, eps):
+        if not FixedPointIteration.check_f_a_b(f, a, b):
+            return 0
+        if x < a or b < x:
+            return 0
+        try:
+            val = abs(FixedPointIteration.get_val(f, x) * FixedPointIteration.get_val(lamb, x))
+            delta = max(x - a, b - x)
+            q = 1 - val / delta
+            n0 = int(
+                np.abs(
+                    np.log(
+                        val / ((1 - q) * eps)
+                    ) /
+                    np.log(1 / q)
+                )
+            ) + 2
+            return n0
+        except (NameError, SyntaxError, ValueError):
+            return 0
+
 
     @staticmethod
     def get_answer_seq(f, lamb, a, b, x0, iter_count):
@@ -68,27 +93,29 @@ class FixedPointIteration:
 
         except (NameError, SyntaxError):
             return res
-        import logging
 
         return res
 
     @staticmethod
     def get_answer(f, lamb, a, b, x0, iter_count):
         if a >= b:
-            return 'Error. A must be less than B'
+            return 'Error. A must be less than B', 0
         if x0 < a or b < x0:
-            return 'Error. x0 must lie inside of [A; B]'
+            return 'Error. x0 must lie inside of [A; B]', 0
+
+        iter_passed_count = 0
         try:
             x = x0
             for i in range(iter_count):
+                iter_passed_count += 1
                 x = x - FixedPointIteration.get_val(lamb, x) * FixedPointIteration.get_val(f, x)
                 if x < a or b < x:
-                    return 'Error. Convergence of function is bad.'
+                    return 'Error. Convergence of function is bad.', iter_passed_count
 
         except (NameError, SyntaxError):
-            return 'Error in your function. Maybe you did something wrong...?   '
+            return 'Error in your function. Maybe you did something wrong...?', iter_passed_count
 
-        return float(x)
+        return float(x), iter_passed_count
 
     @staticmethod
     def error_img():
@@ -121,8 +148,10 @@ class FixedPointIteration:
             resy = FixedPointIteration.get_val(f, res)
             graphic.scatter(res, resy, color='g', zorder=4, alpha=0.3)
 
-        sol = FixedPointIteration.get_answer(f, lamb, a, b, x0, iter_count)
-        graphic.scatter([sol], [0], color='y', zorder=5)
+        sol = FixedPointIteration.get_answer(f, lamb, a, b, x0, iter_count)[0]
+
+        if type(sol) is not str:
+            graphic.scatter([sol], [0], color='y', zorder=5)
 
         return fig
 
@@ -143,13 +172,21 @@ class FixedPointIteration:
 
 
 def get_img(form):
+    n0 = FixedPointIteration.get_n0(
+        form.f.data,
+        form.lamb.data,
+        form.x0.data,
+        form.left_bound.data,
+        form.right_bound.data,
+        form.eps.data
+    )
     return FixedPointIteration.get_img(
         form.f.data,
         form.lamb.data,
         form.left_bound.data,
         form.right_bound.data,
         form.x0.data,
-        form.iter_count.data,
+        n0,
         form.tracing.data,
         form.w.data,
         form.h.data
@@ -157,18 +194,28 @@ def get_img(form):
 
 
 def get_answer(form):
+    n0 = FixedPointIteration.get_n0(
+        form.f.data,
+        form.lamb.data,
+        form.x0.data,
+        form.left_bound.data,
+        form.right_bound.data,
+        form.eps.data
+    )
     ans = FixedPointIteration.get_answer(
         form.f.data,
         form.lamb.data,
         form.left_bound.data,
         form.right_bound.data,
         form.x0.data,
-        form.iter_count.data,
+        n0
     )
 
-    if type(ans) is not float:
-        return ans
-    return '%.9f' % ans
+    if type(ans[0]) is not float:
+        return '%s \n' \
+               ' Passed iterations: %d' % ans
+    return 'Solution: %.9f \n' \
+           'Count of iterations: %d' % ans
 
 
 methods = {

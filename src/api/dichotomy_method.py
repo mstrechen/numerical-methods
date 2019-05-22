@@ -63,13 +63,15 @@ class DichotomyMethod:
         except (NameError, SyntaxError):
             return 'Error in your function. Maybe you did something wrong...?   '
             
+        iter_count = 0
         while a + eps < b:
             mid = (a + b) / 2
             if DichotomyMethod.get_val(f, a) * DichotomyMethod.get_val(f, mid) <= 0:
                 b = mid
             else:
                 a = mid
-        return (a + b) / 2
+            iter_count += 1
+        return (a + b) / 2, iter_count
 
     @staticmethod
     def error_img():
@@ -101,6 +103,7 @@ class DichotomyMethod:
         graphic.scatter(px, py, marker='x', color='r', zorder=3)
 
         if type(res) is not str:
+            res = res[0]
             graphic.scatter(np.array([res]), np.array([0]), color='g', zorder=4)
 
         return fig
@@ -140,9 +143,10 @@ def get_answer(form):
         form.right_bound.data,
         form.eps.data
     )
-    if type(ans) is not float:
+    if type(ans) is str:
         return ans
-    return '%.9f' % ans
+    return 'Solution: %.9f \n' \
+           'Count of iterations: %d' % ans
 
 
 methods = {

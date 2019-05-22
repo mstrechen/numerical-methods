@@ -57,10 +57,11 @@ class FixedPointIterationForm(FlaskForm):
         [validators.required()]
     )
 
-    iter_count = IntegerField(
+    eps = FloatField(
         'Iterations count',
         [validators.required(), validators.NumberRange(0, 10000)]
     )
+
     x0 = FloatField(
         'x_0',
         [validators.required()]
