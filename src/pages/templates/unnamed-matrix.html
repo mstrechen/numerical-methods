@@ -1,0 +1,148 @@
+{% extends "basic-template.html" %}
+{% block title %} Linear system {% endblock %} 
+
+
+{% block content %}
+<div class="container mt-4">
+    <p>
+        Let's determine $\Gamma_k$ as following: 
+        $$ \Gamma_k = 
+        \| 
+            \sum_{p=0}^{n} (\vec{x_i}, \vec{x_j})^p
+        \|_{i,j=1}^{k}
+        $$
+        Where $k$ stands for count of nodes, $n$ is largest power in sum and $k$ stands for dimention of vector space.  
+    </p>
+    <p>
+        Let's say we calculate $\vec{x_i} = (\alpha_{i, 1}, \alpha_{i, 2}, \dots, \alpha_{i, m}), i=\overline{1, k}$. 
+        Also, we are only talking about $\alpha \in [0; 1]$
+    </p>
+    <p>
+        We want to calculate inverted matrix $\Gamma_k^{-1}$ and it's allowed to set $n, m, k$ and 
+        $f(i, j)$ which will determine $\alpha_{i, j}$ 
+    </p>
+    
+    <div class="container rounded border calc-card">
+        <div class="row border rounded">
+                <div class="col-md-4 pt-1 text-center bg-dark rounded">
+                    <form class="mt-2 text-white px-3">
+                        <div class="row">
+                            <label for="n" class="col-md-2 mt-2 col-md-smallpad">N =</label>
+                            <input type="text" class="form-control col-md-2" id="n" placeholder="N" value="5">
+                            <label for="m" class="col-md-2 mt-2 col-md-smallpad">M =</label>
+                            <input type="text" class="form-control col-md-2" id="m" placeholder="M" value="5">
+                            <label for="k" class="col-md-2 mt-2 col-md-smallpad">K =</label>
+                            <input type="text" class="form-control col-md-2" id="k" placeholder="K" value="5">
+                        </div>
+                        <div class="row mt-1">
+                                <label for="alphafun" class="col-md-smallpad""> f(i, j): </label>
+                        </div>
+                        <div class="row mt-1">
+                            <textarea type="text" class="form-control col-md-12" id="alphafun" placeholder="K" value=""> 1 / (i * 2 + j**2)</textarea>
+                        </div>
+                                
+                        <div class="row mt-1">
+                            <div class="col-md-12 ">
+                                <button type="button" onclick="solve()" class="btn btn-primary mb-2" style="width:100%">Calculate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="results_x" class="col-md-8 text-center bg-light rounded-right"
+                style="min-height: 110px">
+                </div>
+        </div>
+        <div id="results_other" class="text-center bg-light rounded-right"
+        style="min-height: 110px">
+        </div>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+        function get_form_data(){
+            var data = {}
+            data.n = document.getElementById("n").value
+            data.k = document.getElementById("k").value
+            data.m = document.getElementById("m").value
+            data.func = document.getElementById("alphafun").value
+            data.func = encodeURIComponent(data.func)
+            return data;
+        }
+        function tex_matrix(M){
+            if(M === undefined)
+                return ""
+            res = ""
+            M.forEach((row) => {
+                res += row.map((x) => Math.round(x * 100000)/100000).join(" & ")
+                res += "\\\\\n";
+            })
+            res = "\\begin{pmatrix}\n" + res + "\\end{pmatrix}"
+            return res
+        }
+        function tex_vector_seq(M){
+            if(M === undefined)
+                return ""
+            res = ""
+            var i = 1;
+            M.forEach((row) => {
+                res += `x_${i} =  (` + row.map((x) => Math.round(x * 100000)/100000).join(",") + ')'
+                res += "\\\\"
+                i++
+            })
+            return res
+        }
+
+        function tex_format_number(s){
+            if(s === undefined)
+                return s;
+            console.log("@#", s)
+            s = String(s)
+            if(s.indexOf('e') == -1)
+                return s;
+            f_p = s.slice(0, s.indexOf('e'))
+            l_p = s.slice(s.indexOf('e') + 1)
+            return `${Math.round(f_p * 100000) / 100000} \\times 10^{${l_p}}` 
+        }
+        function save_result(res_div_id){
+            data = window.localStorage.getItem(`SAVEDRES-${res_div_id}`)
+            var blob = new Blob([data],
+            { type: "text/plain;charset=utf-8" });
+            saveAs(blob, "results.txt");
+        }
+        function put_answer(endpoint, res_div_id, res_div_id_2){
+
+            var Http = new XMLHttpRequest()
+            var url = endpoint
+            Http.open("GET", url);
+            Http.onreadystatechange = (e) => {
+                res = JSON.parse(Http.responseText || "{}")
+                if(res.error_occured){
+                    document.getElementById(res_div_id).innerText = res.error_occured
+                } else {
+                    gammak = res.GammaK
+                    gammakinv = res.GammaKInv
+                    txt1 = "$$" + tex_vector_seq(res.x) + "$$"
+                    console.log()
+                    txt2 = 
+                    "$$ \\Gamma_k = " + tex_matrix(gammak)  + "\\\\"
+                     + "\\Gamma_k^{-1} = " + tex_matrix(gammakinv) +  "$$"
+                    
+                    document.getElementById(res_div_id).innerText = txt1
+                    document.getElementById(res_div_id_2).innerText = txt2
+
+
+                     MathJax.Hub.Queue(["Typeset", MathJax.Hub, res_div_id]);   
+                     MathJax.Hub.Queue(["Typeset", MathJax.Hub, res_div_id_2]);   
+
+                }
+            }
+            Http.send();
+        }
+        function solve(){
+            data = get_form_data()
+            endpoint = `/api/unnamed-matrix/get?n=${data.n}&m=${data.m}&k=${data.k}&func=${data.func}`
+            put_answer(endpoint, 'results_x', 'results_other')
+        }
+
+        solve()
+    </script>
+</div>
+{% endblock %}

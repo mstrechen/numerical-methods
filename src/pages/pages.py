@@ -19,6 +19,35 @@ pages_list = [
                 "root of continuous function"
     },
 
+    {
+        "page": "linear-system",
+        "headline": "System of linear equations",
+        "text": "System of linear equations is a collection "
+                "of two or more linear equations involving the same set of variables." 
+                "We will take a look at 2 methods of solving linear systems: Gaussian" 
+                "elimination and Jacobi method"
+    },
+    {
+        "page": "unnamed-matrix",
+        "headline": "Unnamed matrix",
+        "text": "This is not a general method or something. It is required just to get the matrix based on some characteristics."
+    },
+    {
+        "page": "intersection-of-surfaces",
+        "headline": "Intersection of surfaces",
+        "text": "Intersection of surfaces... Ellipsoid and the plane."
+    },
+    {
+        "page": "cubic-splines",
+        "headline": "Cubic splines",
+        "text": "Cubic splines method is one of dozens methods of function interpolating."
+    },
+    {
+        "page" : "chebyshev-aproximation",
+        "headline": "Chebyshev polynoms & approximation",
+        "Text": "Approximation of function using chebyshev polynoms",
+    }
+
 ]
 
 

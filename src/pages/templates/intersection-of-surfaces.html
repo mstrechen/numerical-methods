@@ -1,0 +1,123 @@
+{% extends "basic-template.html" %}
+{% block title %} Intersection of surfaces {% endblock %}
+
+
+{% block content %}
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div class="container mt-4">
+    <p>
+        Have fun!
+    </p>
+
+    <div class="container rounded border calc-card">
+        <div class="row border rounded">
+                <!--
+                    <div class="col-md-12 pt-1 text-center bg-dark rounded-left">
+                    <form class="mt-2 text-white px-3">
+                        <div class="row">
+                            <label for="function" class="col-md-2 mt-2 col-md-smallpad">&phi;(x) = x + </label>
+                            <input type="text" class="form-control col-md-4" id="lambda" placeholder="&lambda;(x)" value="1 / (2*5 + 4 * cos(6))">
+                            <label for="lambda" class="col-md-1 mt-2"> * </label>
+                            <input type="text" class="form-control col-md-5" id="function" placeholder="f(x)" value="x*x + 4 * sin(x)">
+                        </div>
+                        <div class="row mt-1">
+                            <label for="left_bound" class="col-md-2 mt-2 col-md-smallpad">A =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4 col-md-smallpad" id="left_bound" placeholder="A" value="-5">
+                            <label for="right_bound" class="col-md-2 mt-2 col-md-smallpad">B =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4" id="right_bound" placeholder="B" value="5">
+                        </div>
+                        <div class="row mt-1">
+                            <label for="eps" class="col-md-6 mt-2 col-md-smallpad">&epsilon; = </label>
+                            <input type="number" step="1" class="form-control col-md-6 mb-2" id="eps" placeholder="Count of iterations" value="1e-5">
+                        </div>
+                        <div class="row mt-1">
+                            <label for="x_0" class="col-md-2 mt-2 col-md-smallpad">x<sub>0</sub> = </label>
+                            <input type="number" step="1" class="form-control col-md-6 mb-2" id="x_0" placeholder="Starting value of x" value="4">
+                            <label for="tracing" class="col-md-1 mt-2">Tracing</label>
+                            <input type="checkbox" class="col-md-2 mt-3" id="tracing" checked>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-md-6 ">
+                                <button type="button" onclick="solve()" class="btn btn-primary mb-2" style="width:100%">Calculate</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>-->
+                <div id="illustration" class="col-md-12 text-center bg-light rounded-right"
+                style="min-height: 650px; padding: 0;">
+                    <!-- <button onclick="show_large_illustration()" type="button" class="btn btn-default border bg-white float-right mt-2" data-toggle="modal" data-target=".bd-example-modal-sm"> Fullscreen </button>
+
+                    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" id="large_illustration_holder">
+                        <div class="modal-content" >
+                          <img id="large_illustration" width="100%">
+                        </div>
+                      </div>
+                    </div>
+                -->
+                </div>
+        </div>
+        <div class="row bg-white rounded-bottom py-2 px-4">
+            <h5 class="text-center w-100">
+                <label id="solution_text" class="mb-0"></label> 
+            </h5>
+        </div>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+        function set_bg_image(){
+            Plotly.d3.json("/api/intersection_of_surfaces/all_data", 
+                (datajson) => {
+                    console.log(datajson)
+                    var data=[
+                    {
+                        opacity:0.2,
+                        color:'rgb(100,100,200)',
+                        type: 'scatter3d',
+                        //alphahull: 2.2,
+                        x: datajson.ellipsoid.x,
+                        y: datajson.ellipsoid.y,
+                        z: datajson.ellipsoid.z,
+                        },
+                        {
+                        opacity:0.5,
+                        color:'rgb(100,100,200)',
+                        type: 'mesh3d',
+                        x: datajson.plane.x,
+                        y: datajson.plane.y,
+                        z: datajson.plane.z,
+                        },
+                        {
+                        opacity:0.5,
+                        color:'rgb(0e00,200,000)',
+                        type: 'scatter3d',
+                        x: datajson.plane_on_ellipsoid.x,
+                        y: datajson.plane_on_ellipsoid.y,
+                        z: datajson.plane_on_ellipsoid.z,
+                        },
+                    ];
+                    var layout = {
+                        autosize: true,
+                        margin: {
+                            l: 0,
+                            r: 0,
+                            t: 0,
+                            b: 0
+                        }
+                    }
+                    Plotly.newPlot('illustration', data, layout);
+                }
+            )
+        }
+        function solve(){
+            set_bg_image()
+        }
+
+        window.onresize = set_bg_image()
+
+        solve()
+    </script>
+</div>
+{% endblock %}

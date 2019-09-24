@@ -1,0 +1,129 @@
+{% extends "basic-template.html" %}
+{% block title %} Cubic splines {% endblock %}
+
+
+{% block content %}
+<div class="container mt-4">
+    <p>
+        Cubic splines method is one of dozens methods of function interpolating.
+    </p>
+    
+    <p>
+        You can only use the following list of <i>unary</i> functions:
+        <strong>abs, arccos, arcsin, cbrt, cos, exp, log, log10, log1p, max, min, sin, sgn, sqrt, tan.</strong>
+        Also there are couple of <i>binary</i> functions: <strong>arctan2, hypot, pow.</strong>
+        And of course, you can use all "classical" arithmetic operations.
+    </p>
+    <p>
+        Have fun!
+    </p>
+
+    <div class="container rounded border calc-card">
+        <div class="row border rounded">
+                <div class="col-md-6 pt-1 text-center bg-dark rounded-left">
+                    <form class="mt-2 text-white px-3">
+                        <div class="row">
+                            <label for="function" class="col-md-2 mt-2 col-md-smallpad">f(x) = </label>
+                            <input type="text" class="form-control col-md-5" id="function" placeholder="f(x)" value="1 / (1 + 2 * x * x + x*x*x)">
+                        </div>
+                        <div class="row mt-1">
+                            <label for="left_bound" class="col-md-2 mt-2 col-md-smallpad">A =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4 col-md-smallpad" id="left_bound" placeholder="A" value="-2">
+                            <label for="right_bound" class="col-md-2 mt-2 col-md-smallpad">B =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4" id="right_bound" placeholder="B" value="3">
+                        </div>
+                        <div class="row mt-1">
+                            <label for="N" class="col-md-6 mt-2 col-md-smallpad">N = </label>
+                            <input type="number" step="1" class="form-control col-md-6 mb-2" id="N" placeholder="count_of_segments" value="5">
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-md-6 ">
+                                <button type="button" onclick="solve()" class="btn btn-primary mb-2" style="width:100%">Calculate</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+                <div id="illustration" class="col-md-6 text-center bg-light rounded-right"
+                style="min-height: 250px">
+                    <button onclick="show_large_illustration()" type="button" class="btn btn-default border bg-white float-right mt-2" data-toggle="modal" data-target=".bd-example-modal-sm"> Fullscreen </button>
+
+                    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" id="large_illustration_holder">
+                        <div class="modal-content" >
+                          <img id="large_illustration" width="100%">
+                        </div>
+                      </div>
+                    </div>
+                </div>
+        </div>
+        <div class="row bg-white rounded-bottom py-2 px-4">
+            <h5 class="text-center w-100">
+                <label id="solution_text" class="mb-0"></label> 
+            </h5>
+        </div>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+        function get_form_and_img_data(){
+            var data = {}
+
+            data.fun_encoded = encodeURIComponent(
+                document.getElementById("function").value
+            )
+
+            data.left_bound = document.getElementById("left_bound").value
+            data.right_bound = document.getElementById("right_bound").value
+            data.N = document.getElementById("N").value
+
+            data.tracing = 1
+
+            data.width = document.getElementById("illustration").clientWidth
+            data.height = document.getElementById("illustration").clientHeight
+            return data;
+        }
+        function set_bg_image(){
+            var data = get_form_and_img_data()
+            var url = "/api/cubic-splines/img"
+            + `?f=${data.fun_encoded}`
+            + `&left_bound=${data.left_bound}`
+            + `&right_bound=${data.right_bound}`
+            + `&N=${data.N}`
+            + `&tracing=${data.tracing}`
+            + `&h=${data.height}`
+            + `&w=${data.width}`
+
+            document.getElementById("illustration").style.backgroundImage = `url('${url}')`
+        }
+        function show_large_illustration(){
+
+            w = Math.floor(window.innerWidth / 1.5)
+            h = Math.floor(window.innerHeight - 30)
+
+            var data = get_form_and_img_data()
+            var url = "/api/cubic-splines/img"
+            + `?f=${data.fun_encoded}`
+            + `&left_bound=${data.left_bound}`
+            + `&right_bound=${data.right_bound}`
+            + `&N=${data.N}`
+            + `&tracing=${data.tracing}`
+            + `&h=${data.height}`
+            + `&w=${data.width}`
+
+
+            pic = document.getElementById("large_illustration")
+            pic.src = url
+        }
+
+        function solve(){
+            set_bg_image()
+        }
+        show_large_illustration()
+
+        window.onresize = set_bg_image()
+
+        solve()
+    </script>
+</div>
+{% endblock %}
