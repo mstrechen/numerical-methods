@@ -62,6 +62,11 @@ pages_list = [
         "headline": "Runge-Kutta method for equation of pendulum",
         "text": "Solution of diff. eq. of pendulum",
     },
+    {
+        "page" : "runge-kutta-foxes-and-rabbits",
+        "headline": "Rabbits and foxes problem",
+        "text": "Runge-Kutta method for solving equations of modelling rabbits/foxes population",
+    },
 ]
 
 

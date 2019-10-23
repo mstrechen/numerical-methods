@@ -11,6 +11,7 @@ from . import chebyshev_aprox
 from . import pelengate_problem
 from . import runge_kutta
 from . import runge_kutta_pendulum
+from . import runge_kutta_foxes_and_rabbits
 
 
 from . import forms
@@ -134,6 +135,19 @@ def runge_kutta_pendulum_endpoint(method):
     print(form, flush=True)
     try:
         return runge_kutta_pendulum.methods[method](form)
+    except KeyError:
+        abort(404)
+    except Exception as ex:
+        logging.critical(str(type(ex)) + str(ex))
+        abort(400)
+
+
+@bp.route('/runge-kutta-foxes-and-rabbits/<method>')
+def runge_kutta_foxes_and_rabbits_endpoint(method):
+    form = forms.RungeKuttaPendulumForm(request.args)
+    print(form, flush=True)
+    try:
+        return runge_kutta_foxes_and_rabbits.methods[method](form)
     except KeyError:
         abort(404)
     except Exception as ex:
