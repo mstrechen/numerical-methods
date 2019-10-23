@@ -3,7 +3,7 @@ Laboratory works on numerical methods
 
 ### Let's see...
 
-You can visit [such-a-huge.space](http://such-a-huge.space) to test the labs. 
+You can visit [numerical-methods.azurewebsites.net](https://numerical-methods.azurewebsites.net) to test the labs. 
 
 ### How to run by my own
 
