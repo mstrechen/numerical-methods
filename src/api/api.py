@@ -8,6 +8,9 @@ from . import unnamed_matrix
 from . import intersection_of_surfaces
 from . import cubic_splines
 from . import chebyshev_aprox
+from . import pelengate_problem
+from . import runge_kutta
+from . import runge_kutta_pendulum
 
 
 from . import forms
@@ -91,9 +94,46 @@ def cubic_splines_solve(method):
 @bp.route('/chebyshev-aprox/<method>')
 def chebyshev_aprox_solve(method):
     form = forms.ChebyshevApproxForm(request.args)
-    logging.critical(form)
     try:
         return chebyshev_aprox.methods[method](form)
+    except KeyError:
+        abort(404)
+    except Exception as ex:
+        logging.critical(str(type(ex)) + str(ex))
+        abort(400)
+
+
+@bp.route('/pelengate-problem/<method>')
+def pelengate_problem_solve(method):
+    form = forms.PelengateProblem(request.args)
+    print(form.validate(), flush=True)
+    try:
+        return pelengate_problem.methods[method](form)
+    except KeyError:
+        abort(404)
+    except Exception as ex:
+        logging.critical(str(type(ex)) + str(ex))
+        abort(400)
+
+
+@bp.route('/runge-kutta/<method>')
+def runge_kutta_method(method):
+    form = forms.RungeKuttaForm(request.args)
+    try:
+        return runge_kutta.methods[method](form)
+    except KeyError:
+        abort(404)
+    except Exception as ex:
+        logging.critical(str(type(ex)) + str(ex))
+        abort(400)
+
+
+@bp.route('/runge-kutta-pendulum/<method>')
+def runge_kutta_pendulum_endpoint(method):
+    form = forms.RungeKuttaPendulumForm(request.args)
+    print(form, flush=True)
+    try:
+        return runge_kutta_pendulum.methods[method](form)
     except KeyError:
         abort(404)
     except Exception as ex:

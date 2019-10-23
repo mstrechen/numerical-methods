@@ -45,9 +45,23 @@ pages_list = [
     {
         "page" : "chebyshev-aproximation",
         "headline": "Chebyshev polynoms & approximation",
-        "Text": "Approximation of function using chebyshev polynoms",
-    }
-
+        "text": "Approximation of function using chebyshev polynoms",
+    },
+    {
+        "page" : "pelengate-problem",
+        "headline": "Pelengator problem",
+        "text": "Solution of pelengator problem using Newton method",
+    },
+    {
+        "page" : "runge-kutta",
+        "headline": "Runge-Kutta method",
+        "text": "Solution of Cauchy's problem using Runge-Kutta method",
+    },
+    {
+        "page" : "runge-kutta-pendulum",
+        "headline": "Runge-Kutta method for equation of pendulum",
+        "text": "Solution of diff. eq. of pendulum",
+    },
 ]
 
 

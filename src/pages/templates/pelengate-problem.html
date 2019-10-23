@@ -1,0 +1,201 @@
+{% extends "basic-template.html" %}
+{% block title %} Fixed-point iteration {% endblock %}
+
+
+{% block content %}
+<div class="container mt-4">
+    <p>
+        Fixed-point iteration is a method of computing fixed points of iterated functions. In other words, it can be
+        applied for finding <strong>x</strong> that satisfies <strong>&phi;(x) = x</strong>.
+        In context of root-finding algorithms, we can fixed-point iteration using simple approximation.
+
+        <br>
+        Let
+        <strong>&phi;(x) = x + &lambda;(x) * f(x)</strong> where <strong>f(x)</strong> - function, which root we want
+        to find, <strong>&lambda;(x)</strong> - function that has no roots on segment. Now we can apply fixed-point
+        iteration to find fixed point of <b>&phi;(x)</b>, which also will be the root of <b>f(x)</b>.
+    </p>
+    <p>
+        It is justified to set <b>&lambda;(x) = 1 / f'(x)</b>. In this case we would have Newton's method which is
+        quite fast, but require to calculate the derivative.
+        The other option is to take <b>&lambda;(x) = 1 / f'(x<sub>0</sub>)</b>. But feel free to make some experiments.
+    </p>
+
+    <p>
+        You can only use the following list of <i>unary</i> functions:
+        <strong>abs, arccos, arcsin, cbrt, cos, exp, log, log10, log1p, max, min, sin, sgn, sqrt, tan.</strong>
+        Also there are couple of <i>binary</i> functions: <strong>arctan2, hypot, pow.</strong>
+        And of course, you can use all "classical" arithmetic operations.
+    </p>
+    <p>
+        Have fun!
+    </p>
+
+    <div class="container rounded border calc-card">
+        <div class="row border rounded">
+                <div class="col-md-6 pt-1 text-center bg-dark rounded-left">
+                    <form class="mt-2 text-white px-3">
+                        <div class="row mt-1">
+                            <label for="N" class="col-md-2 mt-2 col-md-smallpad">N =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4 col-md-smallpad" id="N" placeholder="N" value="3">
+                            <label for="iters" class="col-md-2 mt-2 col-md-smallpad">iters =</label>
+                            <input type="number" step="0.000001" class="form-control col-md-4" id="iters" placeholder="iters" value="5">
+                        </div>
+                        <div id="COEFS">
+                            <div class="row mt-1" id="coef_1">
+                                <label for="coef_1_x" class="col-md-2 mt-2 col-md-smallpad">x1 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_1_x" placeholder="iters" value="3">
+                                <label for="coef_1_y" class="col-md-2 mt-2 col-md-smallpad">y1 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_1_y" placeholder="iters" value="0">
+                                <label for="coef_1_r" class="col-md-2 mt-2 col-md-smallpad">r1 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_1_r" placeholder="iters" value="3.5">
+                            </div>
+                            <div class="row mt-1" id="coef_2">
+                                <label for="coef_1_x" class="col-md-2 mt-2 col-md-smallpad">x2 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_2_x" placeholder="iters" value="-3">
+                                <label for="coef_1_y" class="col-md-2 mt-2 col-md-smallpad">y2 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_2_y" placeholder="iters" value="0">
+                                <label for="coef_1_r" class="col-md-2 mt-2 col-md-smallpad">r2 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_2_r" placeholder="iters" value="3">
+                            </div>
+                            <div class="row mt-1" id="coef_3">
+                                <label for="coef_1_x" class="col-md-2 mt-2 col-md-smallpad">x3 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_3_x" placeholder="iters" value="0">
+                                <label for="coef_1_y" class="col-md-2 mt-2 col-md-smallpad">y3 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_3_y" placeholder="iters" value="3">
+                                <label for="coef_1_r" class="col-md-2 mt-2 col-md-smallpad">r3 =</label>
+                                <input type="number" step="0.000001" class="form-control col-md-2" id="coef_3_r" placeholder="iters" value="3">
+                            </div>
+
+                        </div>
+                        <div class="row mt-1">
+                            <label for="x_asterisk" class="col-md-2 mt-2 col-md-smallpad">x<sup>*</sup> = </label>
+                            <input type="number" step="1" class="form-control col-md-4 mb-2" id="x_asterisk" placeholder="Starting value of x" value="4">
+                            <label for="y_asterisk" class="col-md-2 mt-2 col-md-smallpad">y<sup>*</sup> = </label>
+                            <input type="number" step="1" class="form-control col-md-4 mb-2" id="y_asterisk" placeholder="Starting value of y" value="4">
+
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-md-6 ">
+                                <button type="button" onclick="solve()" class="btn btn-primary mb-2" style="width:100%">Calculate</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+                <div id="illustration" class="col-md-6 text-center bg-light rounded-right"
+                style="min-height: 250px">
+                    <button onclick="show_large_illustration()" type="button" class="btn btn-default border bg-white float-right mt-2" data-toggle="modal" data-target=".bd-example-modal-sm"> Fullscreen </button>
+
+                    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" id="large_illustration_holder">
+                        <div class="modal-content" >
+                          <img id="large_illustration" width="100%">
+                        </div>
+                      </div>
+                    </div>
+                </div>
+        </div>
+        <div class="row bg-white rounded-bottom py-2 px-4">
+            <h5 class="text-center w-100">
+                <label id="solution_text" class="mb-0"></label> 
+            </h5>
+        </div>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+        function get_coefs(n) {
+            let res = [];
+            for(let i = 1; i <= n; i++){
+                var coefx = '#coef_' + String(i) + '_x';
+                var coefy = '#coef_' + String(i) + '_y';
+                var coefr = '#coef_' + String(i) + '_r';
+                res.push([
+                    parseFloat($(coefx).val()),
+                    parseFloat($(coefy).val()),
+                    parseFloat($(coefr).val()),
+                ])
+            }
+            return res;
+        }
+        function get_form_and_img_data(){
+            var data = {}
+            data.N = $('#N').val();
+            data.iters = $('#iters').val();
+            data.xstart = $('#x_asterisk').val();
+            data.ystart = $('#y_asterisk').val();
+
+            data.coefs = encodeURI(JSON.stringify(get_coefs(data.N)));
+
+
+            data.width = document.getElementById("illustration").clientWidth
+            data.height = document.getElementById("illustration").clientHeight
+            return data;
+        }
+        function set_bg_image(){
+            var data = get_form_and_img_data();
+            var url = "/api/pelengate-problem/img"
+            + `?N=${data.N}`
+            + `&iters=${data.iters}`
+            + `&xstart=${data.xstart}`
+            + `&ystart=${data.ystart}`
+            + `&coefs=${data.coefs}`
+            + `&h=${data.height}`
+            + `&w=${data.width}`;
+
+            document.getElementById("illustration").style.backgroundImage = `url('${url}')`
+        }
+        function put_answer(){
+            data = get_form_and_img_data();
+
+            var Http = new XMLHttpRequest();
+            var url = "/api/pelengate-problem/ans"
+            + `?N=${data.N}`
+            + `&iters=${data.iters}`
+            + `&xstart=${data.xstart}`
+            + `&ystart=${data.ystart}`
+            + `&coefs=${data.coefs}`;
+
+            console.log(url);
+
+            Http.open("GET", url);
+            Http.onreadystatechange = (e) => {
+                document.getElementById("solution_text").innerText = Http.responseText
+            };
+            Http.send();
+        }
+
+        function show_large_illustration(){
+
+            var w = Math.floor(window.innerWidth / 1.5)
+            var h = Math.floor(window.innerHeight - 30)
+
+            var data = get_form_and_img_data()
+            var data = get_form_and_img_data();
+            var url = "/api/pelengate-problem/img"
+            + `?N=${data.N}`
+            + `&iters=${data.iters}`
+            + `&xstart=${data.xstart}`
+            + `&ystart=${data.ystart}`
+            + `&coefs=${data.coefs}`
+            + `&h=${h}`
+            + `&w=${w}`;
+
+
+            pic = document.getElementById("large_illustration")
+            pic.src = url
+        }
+
+        function solve(){
+            put_answer()
+            set_bg_image()
+        }
+        show_large_illustration()
+
+        window.onresize = set_bg_image()
+
+        solve()
+    </script>
+</div>
+{% endblock %}
