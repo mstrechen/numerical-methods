@@ -1,4 +1,4 @@
-from flask import make_response, send_from_directory
+from flask import make_response, send_from_directory, jsonify
 import logging
 import matplotlib
 
@@ -141,6 +141,15 @@ class RungeKutta:
         graphic.scatter([x0], [y0], color='g')
 
         return fig
+        
+    @classmethod
+    def get_coords(cls, f_func, a, b, N, w, h, g_func, x0, y0, g_const, l_const):
+        a = 0
+        b = abs(b)
+
+        t, x, y = cls.get_runge_kutta(b, x0, y0, N, f_func, g_func, g_const, l_const)
+
+        return jsonify({'t': t.tolist(), 'x': x.tolist(), 'y': y.tolist()})
 
     @classmethod
     def get_img(cls,f, a, b, N, w, h, g_func, x0, y0, g_const, l_const):
@@ -170,6 +179,22 @@ def get_img(form: RungeKuttaPendulumForm):
         form.l_const.data,
     )
 
+def get_coords(form: RungeKuttaPendulumForm):
+    return RungeKutta.get_coords(
+        form.f.data,
+        form.left_bound.data,
+        form.right_bound.data,
+        form.N.data,
+        form.w.data,
+        form.h.data,
+        form.g.data,
+        form.x0.data,
+        form.y0.data,
+        form.g_const.data,
+        form.l_const.data,
+    )
+
 methods = {
-    'img': get_img
+    'img': get_img,
+    'coords': get_coords,
 }
