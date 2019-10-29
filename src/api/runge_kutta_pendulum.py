@@ -196,5 +196,5 @@ def get_coords(form: RungeKuttaPendulumForm):
 
 methods = {
     'img': get_img,
-    'coords': get_coords,
+    'values': get_coords,
 }
